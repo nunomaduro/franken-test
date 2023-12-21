@@ -14,10 +14,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-
-    return view('welcome');
+    return ini_get('max_execution_time');
 });
 
-Route::get('/host', function () {
-    return request()->header('HOST');
+Route::get('/timeout', function () {
+    $x = true;
+    $y = 0;
+
+    $startedAt = time();
+    $stopAt = $startedAt + 10;
+
+    while ($x) {
+        $y++;
+        // stop after 30 seconds, but without sleep:
+        if (time() > $stopAt) {
+            $x = false;
+            $stoppedAfter = time() - $startedAt;
+        }
+    }
+
+    // get php max execution time:
+    return $stoppedAfter;
 });
